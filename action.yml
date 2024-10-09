@@ -1,0 +1,87 @@
+name: License Overview Generator
+description: Downloads and runs the mvdkleijn/licenses tool on a given (CycloneDX) SBOM file.
+
+inputs:
+  sbom:
+    description: "The SBOM file to analyze."
+    required: true
+  type:
+    description: "The file type of the SBOM (xml or json). Defaults to xml."
+    required: false
+    default: "xml"
+  filename:
+    description: "The filename for the generated output. Defaults to 'licenses.md'."
+    required: false
+    default: "licenses.md"
+  template:
+    description: "Go template content for the report generation."
+    required: true
+
+outputs:
+  output:
+    description: "The generated output file."
+    value: ${{ steps.run_licenses.outputs.output }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up environment variables
+      id: setup
+      shell: bash
+      run: |
+        if [[ ${{ runner.os }} == 'Linux' ]]; then
+          OS="Linux"
+        elif [[ ${{ runner.os }} == 'macOS' ]]; then
+          OS="Darwin"
+        else
+          echo "Unsupported OS: $OS"
+          exit 1
+        fi
+
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" ]]; then
+          ARCH="x86_64"
+        elif [[ "$ARCH" == "arm64" ]]; then
+          ARCH="arm64"
+        else
+          echo "Unsupported architecture: $ARCH"
+          exit 1
+        fi
+
+        echo "os_arch=${OS}_${ARCH}" >> $GITHUB_ENV
+
+    - name: Download binary
+      shell: bash
+      run: |
+        DOWNLOAD_URL="https://github.com/mvdkleijn/licenses/releases/download/v1.0.1/licenses_${{ env.os_arch }}.tar.gz"
+        curl -L -o licenses.tar.gz "$DOWNLOAD_URL"
+
+    - name: Extract binary
+      shell: bash
+      run: |
+        mkdir licenses_bin
+        tar -xzf licenses.tar.gz -C licenses_bin
+
+    - name: Create template file
+      shell: bash
+      run: |
+        echo "${{ inputs.template }}" > template.txt
+
+    - name: Run licenses tool
+      id: run_licenses
+      shell: bash
+      run: |
+        mkdir -p output
+        ./licenses_bin/licenses -i "${{ inputs.sbom }}" -o "output/${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
+
+    - name: Upload output file
+      shell: bash
+      run: |
+        echo "output_path=output/${{ inputs.filename }}" >> $GITHUB_ENV
+        echo "output=output/${{ inputs.filename }}" >> $GITHUB_OUTPUT
+
+    - name: Save as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: licenses-output
+        path: output/${{ inputs.filename }}
