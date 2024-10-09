@@ -30,18 +30,14 @@ To use this action in your workflow, add the following step:
 
 ```yaml
 jobs:
-  license-check:
+  licenses:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Generate SBOM file
-        run: |
-          echo "PLACEHOLDER SBOM CONTENT" > sbom.xml
-
-      - name: Run License Checker Action
+      - name: Run Licenses Action
         uses: mvdkleijn/licenses-action@v1
         with:
           sbom: sbom.xml
@@ -57,12 +53,6 @@ jobs:
             {{range index $.ComponentsByLicense .}}- {{.Name}} ({{.Version}})
             {{end}}
             {{end}}
-
-      - name: Upload License Check Output
-        uses: actions/upload-artifact@v3
-        with:
-          name: license-check-output
-          path: output/licenses.md
 ```
 
 ## Contributing
