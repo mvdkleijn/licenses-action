@@ -81,7 +81,7 @@ runs:
         echo "output=output/${{ inputs.filename }}" >> $GITHUB_OUTPUT
 
     - name: Save as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.filename }}
         path: output/${{ inputs.filename }}
