@@ -1,6 +1,10 @@
 name: License Overview Generator
 description: Downloads and runs the mvdkleijn/licenses tool on a given (CycloneDX) SBOM file.
 
+branding:
+  icon: 'file-text'
+  color: 'red'
+
 inputs:
   sbom:
     description: "The SBOM file to analyze."
