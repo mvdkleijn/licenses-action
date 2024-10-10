@@ -4,7 +4,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/mvdkleijn/licenses-action)
 ![GitHub](https://img.shields.io/github/license/mvdkleijn/licenses-action)
 
-A GitHub Action to run the mvdkleijn/licenses tool. This allows you to generate
+A GitHub Action to run the [mvdkleijn/licenses](https://github.com/mvdkleijn/licenses) tool. This allows you to generate
 a simple, human readable overview of the licenses mentioned in a provided SBOM.
 
 ## Features
