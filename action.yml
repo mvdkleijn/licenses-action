@@ -76,7 +76,7 @@ runs:
       shell: bash
       run: |
         mkdir -p output
-        ./licenses_bin/licenses -i "${{ inputs.sbom }}" -o "output/${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
+        ./licenses_bin/licenses -i "${{ inputs.sbom }}" -o "${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
 
     - name: Upload output file
       shell: bash
