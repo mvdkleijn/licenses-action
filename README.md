@@ -19,6 +19,8 @@ a simple, human readable overview of the licenses mentioned in a provided SBOM.
 - `type` (optional): The format of the SBOM file, either `xml` or `json`. Defaults to `xml`.
 - `filename` (optional): The filename for the generated report file. Defaults to `licenses.md`.
 - `template` (required): Template content used to generate the report.
+- `evaluate` (optional): Whether or not to evaluate license compatibility based on the
+                         way [mvdkleijn/licenses](https://github.com/mvdkleijn/licenses) works.
 
 ## Outputs
 
@@ -53,6 +55,7 @@ jobs:
             {{range index $.ComponentsByLicense .}}- {{.Name}} ({{.Version}})
             {{end}}
             {{end}}
+          evaluate: true
 ```
 
 ## Contributing
