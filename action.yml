@@ -20,6 +20,10 @@ inputs:
   template:
     description: "Go template content for the report generation."
     required: true
+  evaluate:
+    description: "Whether or not to evaluate license compatibility."
+    required: false
+    default: "false"
 
 outputs:
   output:
@@ -57,14 +61,16 @@ runs:
     - name: Download binary
       shell: bash
       run: |
-        DOWNLOAD_URL="https://github.com/mvdkleijn/licenses/releases/download/v1.0.1/licenses_${{ env.os_arch }}.tar.gz"
+        DOWNLOAD_URL="https://github.com/mvdkleijn/licenses/releases/download/v1.2.0/licenses_${{ env.os_arch }}.tar.gz"
         curl -L -o licenses.tar.gz "$DOWNLOAD_URL"
+        curl -L -o compatibility.yaml "https://github.com/mvdkleijn/licenses/blob/v1.2.0/compatibility.yaml"
 
     - name: Extract binary
       shell: bash
       run: |
         mkdir licenses_bin
         tar -xzf licenses.tar.gz -C licenses_bin
+        mv compatibility.yaml licenses_bin/compatibility.yaml
 
     - name: Create template file
       shell: bash
@@ -76,7 +82,11 @@ runs:
       shell: bash
       run: |
         mkdir -p output
-        ./licenses_bin/licenses -i "${{ inputs.sbom }}" -o "${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
+        if [ "${{ inputs.evaluate }}" = "true" ]; then
+          ./licenses_bin/licenses --validate -i "${{ inputs.sbom }}" -o "${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
+        else
+          ./licenses_bin/licenses -i "${{ inputs.sbom }}" -o "${{ inputs.filename }}" -f "${{ inputs.type }}" -t "template.txt"
+        fi
 
     - name: Upload output file
       shell: bash
