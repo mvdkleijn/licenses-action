@@ -70,6 +70,7 @@ runs:
       run: |
         mkdir licenses_bin
         tar -xzf licenses.tar.gz -C licenses_bin
+        mv compatibility.yaml licenses_bin/compatibility.yaml
 
     - name: Create template file
       shell: bash
