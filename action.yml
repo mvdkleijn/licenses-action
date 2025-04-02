@@ -61,9 +61,9 @@ runs:
     - name: Download binary
       shell: bash
       run: |
-        DOWNLOAD_URL="https://github.com/mvdkleijn/licenses/releases/download/v1.2.0/licenses_${{ env.os_arch }}.tar.gz"
+        DOWNLOAD_URL="https://github.com/mvdkleijn/licenses/releases/download/v1.2.1/licenses_${{ env.os_arch }}.tar.gz"
         curl -L -o licenses.tar.gz "$DOWNLOAD_URL"
-        curl -L -o compatibility.yaml "https://raw.githubusercontent.com/mvdkleijn/licenses/refs/tags/v1.2.0/compatibility.yaml"
+        curl -L -o compatibility.yaml "https://raw.githubusercontent.com/mvdkleijn/licenses/refs/tags/v1.2.1/compatibility.yaml"
 
     - name: Extract binary
       shell: bash
